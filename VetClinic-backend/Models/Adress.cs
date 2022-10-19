@@ -1,4 +1,6 @@
-﻿namespace VetClinic_backend.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace VetClinic_backend.Models
 {
     public class Adress
     {
@@ -9,5 +11,6 @@
         public string Town { get; set; }
         public string PostCode { get; set; }
         public string Country { get; set; }
+        public virtual User User { get; set; }
     }
 }

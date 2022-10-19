@@ -1,4 +1,6 @@
-﻿namespace VetClinic_backend.Models
+﻿using VetClinic_backend.Enums;
+
+namespace VetClinic_backend.Models
 {
     public class User
     {
@@ -8,6 +10,8 @@
         public string Email { get; set; }
         public string Password { get; set; }
         public string PhoneNumber { get; set; }
-        public enum Roles { }
+        public Roles Roles { get; set; }
+        public Adress Adress { get; set; }
+        public virtual Employee Employee { get; set; }
     }
 }
