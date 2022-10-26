@@ -8,6 +8,9 @@ namespace VetClinic_backend.Models
         public string Name { get; set; }
         public Genders Gender { get; set; }
         public DateTime? BirthDate { get; set; }    
-        public ICollection<Specie> Species { get; set; }
+        public Specie Specie { get; set; }
+        public User User { get; set; }
+        public ICollection<Examination> Examinations { get; set; }
+        public ICollection<Visit> Visits { get; set; }
     }
 }

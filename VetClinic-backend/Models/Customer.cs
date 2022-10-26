@@ -1,6 +1,6 @@
 ﻿namespace VetClinic_backend.Models
 {
-    public class User
+    public class Customer
     {
     }
 }

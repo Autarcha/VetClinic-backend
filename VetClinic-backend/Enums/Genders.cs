@@ -1,6 +1,8 @@
 ﻿namespace VetClinic_backend.Enums
 {
-    public class Genders
+    public enum Genders
     {
+        Male,
+        Female
     }
 }
