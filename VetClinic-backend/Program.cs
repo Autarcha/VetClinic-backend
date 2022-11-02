@@ -1,11 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using VetClinic_backend.Data;
+using VetClinic_backend.Interfaces;
+using VetClinic_backend.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<IUserInterface, UserRepository>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
