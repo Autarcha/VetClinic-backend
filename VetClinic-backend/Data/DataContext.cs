@@ -10,7 +10,7 @@ namespace VetClinic_backend.Data
 
         }
 
-        public DbSet<Adress> Adresses { get; set; }
+        public DbSet<Address> Addresses { get; set; }
         public DbSet<User> Users { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

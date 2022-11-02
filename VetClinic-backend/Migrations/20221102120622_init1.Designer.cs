@@ -12,8 +12,8 @@ using VetClinic_backend.Data;
 namespace VetClinic_backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221102103603_init")]
-    partial class init
+    [Migration("20221102120622_init1")]
+    partial class init1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,7 @@ namespace VetClinic_backend.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("VetClinic_backend.Models.Adress", b =>
+            modelBuilder.Entity("VetClinic_backend.Models.Address", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -56,7 +56,7 @@ namespace VetClinic_backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Adresses");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("VetClinic_backend.Models.User", b =>
@@ -67,7 +67,7 @@ namespace VetClinic_backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("AdressId")
+                    b.Property<int>("AddressId")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -92,23 +92,23 @@ namespace VetClinic_backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdressId");
+                    b.HasIndex("AddressId");
 
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("VetClinic_backend.Models.User", b =>
                 {
-                    b.HasOne("VetClinic_backend.Models.Adress", "Adress")
+                    b.HasOne("VetClinic_backend.Models.Address", "Address")
                         .WithMany("Users")
-                        .HasForeignKey("AdressId")
+                        .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Adress");
+                    b.Navigation("Address");
                 });
 
-            modelBuilder.Entity("VetClinic_backend.Models.Adress", b =>
+            modelBuilder.Entity("VetClinic_backend.Models.Address", b =>
                 {
                     b.Navigation("Users");
                 });
