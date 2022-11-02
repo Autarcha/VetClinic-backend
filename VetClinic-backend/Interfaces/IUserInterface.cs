@@ -5,9 +5,10 @@ namespace VetClinic_backend.Interfaces
     public interface IUserInterface
     {
         public ICollection<User> GetAllUsers();
-        User GetUser(int id);
+        User GetUser(int userId);
         User Getuser(string email);
         User GetUser(string name, string surname);
-        Address GetUserAddress(int id);
+        bool UserExists(int userId);
+
     }
 }
