@@ -14,33 +14,33 @@ namespace VetClinic_backend.Configurations
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Id)
-                .HasColumnName("id")
+                .HasColumnName("Id")
                 .HasColumnType("int")
                 .ValueGeneratedOnAdd();
 
             builder.Property(x => x.Name)
-                .HasColumnName("name")
+                .HasColumnName("Name")
                 .HasColumnType("nvarchar(MAX)")
                 .IsRequired();
 
             builder.Property(x => x.Surname)
-                .HasColumnName("name")
+                .HasColumnName("Surname")
                 .HasColumnType("nvarchar(MAX)")
                 .IsRequired();
 
             builder.Property(x => x.Email)
-                .HasColumnName("email")
+                .HasColumnName("Email")
                 .HasMaxLength(100)
                 .IsRequired();
             builder.HasIndex(x => x.Email).IsUnique();
 
             builder.Property(x => x.Password)
-                .HasColumnName("password")
+                .HasColumnName("Password")
                 .HasColumnType("nvarchar(MAX)")
                 .IsRequired();
 
             builder.Property(x => x.Role)
-                .HasColumnName("role")
+                .HasColumnName("Role")
                 .HasColumnType("int")
                 .HasDefaultValue(Role.User);
 
