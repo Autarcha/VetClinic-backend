@@ -2,9 +2,9 @@
 
 namespace VetClinic_backend.Dto
 {
-    public class UserRegisterDtocs
+    public class UserRegisterDto
     {
-        // dane osobowe - wymagane
+        // Register user model dto
         [Required(ErrorMessage = "This value is required.")]
         [RegularExpression(@"^[a-zA-ZąęółżźćńśĄĘÓŻŹĆŃŁŚ]{3,24}")]
         [MaxLength(24)]
