@@ -13,6 +13,7 @@ namespace VetClinic_backend.Models
     }
     public class User
     {
+        //User model class
         public int Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }

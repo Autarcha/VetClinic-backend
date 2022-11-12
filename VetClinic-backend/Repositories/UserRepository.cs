@@ -1,10 +1,18 @@
 ﻿using VetClinic_backend.Data;
-using VetClinic_backend.Interfaces;
 using VetClinic_backend.Models;
 
 namespace VetClinic_backend.Repositories
 {
-    public class UserRepository : IUserInterface
+    public interface IUserRepository
+    {
+        public Task<User?> GetUserById(int id);
+        public Task<User?> GetUserByEmail(string email);
+        public Task<User?> LoginUser(string email, string password);
+        public Task<User?> AddUser(User user);
+        public Task<User?> UpdateUser(User user);
+
+    }
+    public class UserRepository : IUserRepository
     {
         private readonly DataContext _context;
         public UserRepository(DataContext context)
