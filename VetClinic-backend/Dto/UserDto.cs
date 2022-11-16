@@ -1,4 +1,6 @@
-﻿namespace VetClinic_backend.Dto
+﻿using VetClinic_backend.Models;
+
+namespace VetClinic_backend.Dto
 {
     public class UserDto
     {
@@ -7,5 +9,6 @@
         public string Surname { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
+        public Role Role { get; set; }
     }
 }
