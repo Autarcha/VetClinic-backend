@@ -10,6 +10,7 @@ namespace VetClinic_backend.Interfaces
         public Task<User?> LoginUser(string email, string password);
         public Task<User?> AddUser(User user);
         public Task<User?> UpdateUser(User user);
+        public Task<bool> SaveChangesAsync();
 
     }
 }

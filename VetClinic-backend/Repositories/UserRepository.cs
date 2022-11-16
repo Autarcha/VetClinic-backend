@@ -21,12 +21,6 @@ namespace VetClinic_backend.Repositories
             return users;
         }
 
-        public async Task<User?> AddUser(User user)
-        {
-            var newUser = await _context.Users.AddAsync(user);
-            return newUser.Entity;
-        }
-
         public async Task<User?> GetUserByName(string name, string surname)
         {
             var result = await _context.Users.FirstOrDefaultAsync(u => u.Name == name && u.Surname == surname);
@@ -40,14 +34,26 @@ namespace VetClinic_backend.Repositories
         return result;
         }
 
+        public async Task<User?> AddUser(User user)
+        {
+            var newUser = await _context.Users.AddAsync(user);
+            return newUser.Entity;
+        }
+
+        public async Task<User?> UpdateUser(User user)
+        {
+            var updateUser = _context.Users.Update(user);
+            return updateUser.Entity;
+        }
+
         public async Task<User?> LoginUser(string email, string password)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<User?> UpdateUser(User user)
+        public async Task<bool> SaveChangesAsync()
         {
-            throw new NotImplementedException();
+            return await _context.SaveChangesAsync() >= 0;
         }
     }
 }

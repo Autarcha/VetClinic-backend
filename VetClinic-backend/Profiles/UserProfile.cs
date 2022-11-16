@@ -9,6 +9,8 @@ namespace VetClinic_backend.Profiles
         public UserProfile()
         {
             CreateMap<User, UserDto>();
+            CreateMap<User, UserRegisterDto>();
+            CreateMap<UserRegisterDto, User>();
         }
     }
 }
