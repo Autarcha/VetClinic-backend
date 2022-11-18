@@ -4,7 +4,7 @@ namespace VetClinic_backend.Interfaces
 {
     public interface IUserRepository
     {
-        public Task<IEnumerable<User>> GetAllUsers();
+        public IQueryable<User>? GetAllUsers();
         public Task<User?> GetUserById(int id);
         public Task<User?> GetUserByName(string name, string surname);
         public Task<User?> LoginUser(string email, string password);
