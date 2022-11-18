@@ -15,10 +15,9 @@ namespace VetClinic_backend.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<User>> GetAllUsers()
+        public IQueryable<User>? GetAllUsers()
         {
-            var users = await _context.Users.OrderBy(u => u.Id).ToListAsync();
-            return users;
+            return _context.Users.OrderBy(u => u.Id);
         }
 
         public async Task<User?> GetUserByName(string name, string surname)
@@ -48,7 +47,18 @@ namespace VetClinic_backend.Repositories
 
         public async Task<User?> LoginUser(string email, string password)
         {
-            throw new NotImplementedException();
+            var users = GetAllUsers();
+            var result = await users.FirstOrDefaultAsync(x => x.Email == email);
+            if (result is null)
+                return result;
+
+            var isValidPassword = BCrypt.Net.BCrypt.Verify(password, result.Password);
+
+            if (isValidPassword)
+            {
+                return result;
+            }
+            return null;
         }
 
         public async Task<bool> SaveChangesAsync()

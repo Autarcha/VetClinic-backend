@@ -11,6 +11,8 @@ namespace VetClinic_backend.Profiles
             CreateMap<User, UserDto>();
             CreateMap<User, UserRegisterDto>();
             CreateMap<UserRegisterDto, User>();
+            CreateMap<UserLoginDto, User>();
+            CreateMap<User, UserLoginDto>();
         }
     }
 }
