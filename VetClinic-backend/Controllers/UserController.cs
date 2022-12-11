@@ -12,7 +12,7 @@ using VetClinic_backend.Repositories;
 namespace VetClinic_backend.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("api/Users")]
     [ApiController]
     public class UserController : Controller
     {
@@ -25,7 +25,6 @@ namespace VetClinic_backend.Controllers
             _mapper = mapper;
             _jwtAuthenctiaction = jwtAuthenctiaction;
         }
-
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<UserDto>))]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
@@ -34,7 +33,7 @@ namespace VetClinic_backend.Controllers
             return Ok(_mapper.Map<IEnumerable<UserDto>>(request));
         }
 
-        [HttpGet("userId")]
+        [HttpGet("Profile")]
         [ProducesResponseType(200, Type = typeof(UserDto))]
         public async Task<ActionResult<UserDto>> GetUserById(int id)
         {
@@ -42,15 +41,15 @@ namespace VetClinic_backend.Controllers
             return Ok(_mapper.Map<UserDto>(request));
         }
 
-        [HttpGet("userName")]
+        [HttpGet("{user_name}")]
         [ProducesResponseType(200, Type = typeof(UserDto))]
         public async Task<ActionResult<UserDto>> GetUserByName(string name, string surname)
-        {
+        {            
             var request = await _userRepository.GetUserByName(name, surname);
             return Ok(_mapper.Map<UserDto>(request));
         }
 
-        [HttpPost("register", Name = "RegisterUser")]
+        [HttpPost("Register", Name = "RegisterUser")]
         [ProducesResponseType(200, Type = typeof(UserDto))]
         public async Task<ActionResult<UserDto>> RegisterUser([FromBody] UserRegisterDto userRegisterData)
         {
@@ -74,7 +73,7 @@ namespace VetClinic_backend.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("login", Name = "LoginUser")]
+        [HttpPost("Login", Name = "LoginUser")]
         [ProducesResponseType(200, Type = typeof(UserDto))]
         public async Task<ActionResult<UserDto>> LoginUser(UserLoginDto loginData)
         {
@@ -88,6 +87,7 @@ namespace VetClinic_backend.Controllers
             }
 
             var token = _jwtAuthenctiaction.GenerateAuthenticationToken(result.Result);
+            HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "AuthToken");
             HttpContext.Response.Headers.Add("AuthToken", token);
             return Ok(_mapper.Map<UserDto>(result.Result));
         }
