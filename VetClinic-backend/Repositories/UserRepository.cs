@@ -20,9 +20,9 @@ namespace VetClinic_backend.Repositories
             return _context.Users.OrderBy(u => u.Id);
         }
 
-        public async Task<User?> GetUserByName(string name, string surname)
+        public async Task<User?> GetUserByEmail(string email)
         {
-            var result = await _context.Users.FirstOrDefaultAsync(u => u.Name == name && u.Surname == surname);
+            var result = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             return result;
         }
 
@@ -42,6 +42,7 @@ namespace VetClinic_backend.Repositories
         public async Task<User?> UpdateUser(User user)
         {
             var updateUser = _context.Users.Update(user);
+            await _context.SaveChangesAsync();
             return updateUser.Entity;
         }
 

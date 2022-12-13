@@ -44,14 +44,6 @@ namespace VetClinic_backend.Controllers
             return Ok(_mapper.Map<UserDto>(request));
         }
 
-        [HttpGet("{user_name}")]
-        [ProducesResponseType(200, Type = typeof(UserDto))]
-        public async Task<ActionResult<UserDto>> GetUserByName(string name, string surname)
-        {            
-            var request = await _userRepository.GetUserByName(name, surname);
-            return Ok(_mapper.Map<UserDto>(request));
-        }
-
         [HttpPost("Register", Name = "RegisterUser")]
         [ProducesResponseType(200, Type = typeof(UserDto))]
         public async Task<ActionResult<UserDto>> RegisterUser([FromBody] UserRegisterDto userRegisterData)
@@ -94,5 +86,63 @@ namespace VetClinic_backend.Controllers
             HttpContext.Response.Headers.Add("AuthToken", token);
             return Ok(_mapper.Map<UserDto>(result.Result));
         }
+
+        [HttpPut]
+        public async Task<ActionResult<UserDto>> UpdateUser(UserUpdateDto request)
+        {
+            var userId = int.Parse(User.Claims.First(x => x.Type == "id").Value);
+
+            var user = await _userRepository.GetUserById(userId);
+
+            if (user is null)
+            {
+                ModelState.AddModelError("", "Nie znaleziono takiego użytkownika");
+                return StatusCode(404, ModelState);
+            }
+
+            if (!String.IsNullOrEmpty(request.Email))
+            {
+                var checkIfExist = await _userRepository.GetUserByEmail(request.Email);
+                if (checkIfExist is not null && user.Email != request.Email)
+                {
+                    return Problem("Zarejestrowano juz konto na ten mail");
+                }
+                user.Email = request.Email;
+            }
+
+            if (!(String.IsNullOrEmpty(request.OldPassword) && String.IsNullOrEmpty(request.NewPassword)))
+            {
+                if (!BCrypt.Net.BCrypt.Verify(request.OldPassword, user.Password))
+                {
+                    return Problem("Błędne obecne hasło");
+                }
+
+
+                if (BCrypt.Net.BCrypt.Verify(request.NewPassword, user.Password))
+                {
+                    return Problem("Nowe hasło nie może być takie smao jak poprzednie");
+                }
+
+                user.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+            }
+            if (!String.IsNullOrEmpty(request.Name))
+            {
+                user.Name = request.Name;
+            }
+            if (!String.IsNullOrEmpty(request.Surname))
+            {
+                user.Surname = request.Surname;
+            }
+            if (!String.IsNullOrEmpty(request.PhoneNumber))
+            {
+                user.PhoneNumber = request.PhoneNumber;
+            }
+
+            var result = await _userRepository.UpdateUser(user);
+
+            return Ok(_mapper.Map<UserDto>(result));
+
+        }
+
     }
 }
