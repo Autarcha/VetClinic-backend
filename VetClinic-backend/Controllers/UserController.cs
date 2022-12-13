@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,7 @@ using VetClinic_backend.Repositories;
 
 namespace VetClinic_backend.Controllers
 {
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/Users")]
     [ApiController]
     public class UserController : Controller
@@ -25,6 +26,7 @@ namespace VetClinic_backend.Controllers
             _mapper = mapper;
             _jwtAuthenctiaction = jwtAuthenctiaction;
         }
+
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<UserDto>))]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
@@ -35,9 +37,10 @@ namespace VetClinic_backend.Controllers
 
         [HttpGet("Profile")]
         [ProducesResponseType(200, Type = typeof(UserDto))]
-        public async Task<ActionResult<UserDto>> GetUserById(int id)
+        public async Task<ActionResult<UserDto>> GetUserById()
         {
-            var request = await _userRepository.GetUserById(id);
+            var userId = int.Parse(User.Claims.First(x => x.Type == "id").Value);
+            var request = await _userRepository.GetUserById(userId);
             return Ok(_mapper.Map<UserDto>(request));
         }
 

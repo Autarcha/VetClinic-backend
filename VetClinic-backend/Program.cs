@@ -59,17 +59,16 @@ builder.Services.AddAuthentication(x =>
     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(x =>
 {
+    var key = builder.Configuration["Jwt:Key"];
     x.RequireHttpsMetadata = false;
-    x.SaveToken = true;
     x.TokenValidationParameters = new TokenValidationParameters()
     {
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"])),
-        ValidateIssuerSigningKey = true,
         ValidateIssuer = false,
         ValidateAudience = false,
-        ClockSkew = TimeSpan.Zero
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key))
     };
 });
+
 builder.Services.AddSingleton<IAuthentication>(new Authentication(builder.Configuration["Jwt:Key"]));
 var app = builder.Build();
 
