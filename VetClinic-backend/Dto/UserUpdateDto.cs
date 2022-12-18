@@ -22,15 +22,6 @@ namespace VetClinic_backend.Dto
 
         [Required(AllowEmptyStrings = true)]
         [DefaultValue("")]
-        public string? OldPassword { get; set; }
-
-        [Required(AllowEmptyStrings = true)]
-        [DefaultValue("")]
-        [RegularExpression(@"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")]
-        public string? NewPassword { get; set; }
-
-        [Required(AllowEmptyStrings = true)]
-        [DefaultValue("")]
         [RegularExpression(@"^[0-9]{9,9}$")]
         public string? PhoneNumber { get; set; }
     }
