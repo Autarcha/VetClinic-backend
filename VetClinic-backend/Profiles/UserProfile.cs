@@ -1,6 +1,6 @@
-﻿using VetClinic_backend.Dto;
-using VetClinic_backend.Models;
+﻿using VetClinic_backend.Models;
 using AutoMapper;
+using VetClinic_backend.Dto.UserDto;
 
 namespace VetClinic_backend.Profiles
 {
@@ -15,6 +15,8 @@ namespace VetClinic_backend.Profiles
             CreateMap<User, UserLoginDto>();
             CreateMap<User, UserUpdateDto>();
             CreateMap<UserUpdateDto, User>();
+            CreateMap<User, UserProfileDto>();
+            CreateMap<UserProfileDto, User>();
         }
     }
 }

@@ -3,12 +3,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.JsonWebTokens;
 using VetClinic_backend.Authentication;
-using VetClinic_backend.Dto;
+using VetClinic_backend.Dto.UserDto;
 using VetClinic_backend.Interfaces;
 using VetClinic_backend.Models;
-using VetClinic_backend.Repositories;
 
 namespace VetClinic_backend.Controllers
 {
@@ -36,12 +34,12 @@ namespace VetClinic_backend.Controllers
         }
 
         [HttpGet("Profile")]
-        [ProducesResponseType(200, Type = typeof(UserDto))]
-        public async Task<ActionResult<UserDto>> GetUserById()
+        [ProducesResponseType(200, Type = typeof(UserProfileDto))]
+        public async Task<ActionResult<UserProfileDto>> GetUserProfile()
         {
             var userId = int.Parse(User.Claims.First(x => x.Type == "id").Value);
             var request = await _userRepository.GetUserById(userId);
-            return Ok(_mapper.Map<UserDto>(request));
+            return Ok(_mapper.Map<UserProfileDto>(request));
         }
 
         [HttpPost("Register", Name = "RegisterUser")]
@@ -162,13 +160,15 @@ namespace VetClinic_backend.Controllers
             {
                 if (!BCrypt.Net.BCrypt.Verify(request.OldPassword, user.Password))
                 {
-                    return Problem("Błędne obecne hasło");
+                    ModelState.AddModelError("", "Błędne obecne hasło");
+                    return StatusCode(406, ModelState);
                 }
 
 
-                if (BCrypt.Net.BCrypt.Verify(request.NewPassword, user.Password))
-                {
-                    return Problem("Nowe hasło nie może być takie smao jak poprzednie");
+                if (BCrypt.Net.BCrypt.Verify(request.NewPassword, user.Password)) { 
+
+                    ModelState.AddModelError("", "Nowe hasło nie może być takie samo jak poprzednie");
+                    return StatusCode(500, ModelState);
                 }
 
                 user.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);

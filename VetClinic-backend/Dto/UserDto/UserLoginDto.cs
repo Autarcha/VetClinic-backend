@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace VetClinic_backend.Dto
+namespace VetClinic_backend.Dto.UserDto
 {
     public class UserLoginDto
     {
