@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace VetClinic_backend.Dto.UserDto
 {
-    public class UserUpdateDto
+    public class UserDetailsDto
     {
         [Required(AllowEmptyStrings = true)]
         [DefaultValue("")]

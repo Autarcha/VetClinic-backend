@@ -18,18 +18,28 @@ namespace VetClinic_backend.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IAuthentication _jwtAuthenctiaction;
-        public UserController(IUserRepository userRepository, IMapper mapper, IAuthentication jwtAuthenctiaction)
+        private readonly IGeneratePassword _generatePassword;
+        private readonly IEmailService _emailService;
+        public UserController(IUserRepository userRepository, IMapper mapper, IAuthentication jwtAuthenctiaction, IGeneratePassword generatePassword, IEmailService emailService)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _jwtAuthenctiaction = jwtAuthenctiaction;
+            _generatePassword = generatePassword;
+            _emailService = emailService;
         }
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<UserDto>))]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
         {
+            var userRole = Enum.Parse<Role>(User.Claims.First(x => x.Type == "userRole").Value);
             var request = _userRepository.GetAllUsers();
+
+            if(userRole != Role.Admin)
+            {
+                request = request.Where(x => x.Role == Role.User);
+            }
             return Ok(_mapper.Map<IEnumerable<UserDto>>(request));
         }
 
@@ -44,7 +54,7 @@ namespace VetClinic_backend.Controllers
 
         [HttpPost("Register", Name = "RegisterUser")]
         [ProducesResponseType(200, Type = typeof(UserDto))]
-        public async Task<ActionResult<UserDto>> RegisterUser([FromBody] UserRegisterDto userRegisterData)
+        public async Task<ActionResult<UserDto>> RegisterUser(UserDetailsDto userRegisterData)
         {
             if(userRegisterData == null)
             {
@@ -58,9 +68,13 @@ namespace VetClinic_backend.Controllers
                 return StatusCode(422, ModelState);
             }
 
+            var userPassword = _generatePassword.GenerateRandomCode();
+
             var userRegisterMap = _mapper.Map<User>(userRegisterData);
-            userRegisterMap.Password = BCrypt.Net.BCrypt.HashPassword(userRegisterData.Password);
+            userRegisterMap.Password = BCrypt.Net.BCrypt.HashPassword(userPassword);
+            userRegisterMap.Role = Role.User;
             await _userRepository.AddUser(userRegisterMap);
+            await _emailService.SendPasswordMail(userRegisterMap, userPassword);
             await _userRepository.SaveChangesAsync();
             return Ok("Pomysnie utworzono użytkownika");
         }
@@ -86,7 +100,7 @@ namespace VetClinic_backend.Controllers
         }
 
         [HttpPut("UpdateDetails")]
-        public async Task<ActionResult<UserDto>> UpdateUserDetails(UserUpdateDto request)
+        public async Task<ActionResult<UserDto>> UpdateUserDetails(UserDetailsDto request)
         {
             var userId = int.Parse(User.Claims.First(x => x.Type == "id").Value);
 
@@ -108,29 +122,16 @@ namespace VetClinic_backend.Controllers
                 user.Email = request.Email;
             }
 
-/*            if (!(String.IsNullOrEmpty(request.OldPassword) && String.IsNullOrEmpty(request.NewPassword)))
-            {
-                if (!BCrypt.Net.BCrypt.Verify(request.OldPassword, user.Password))
-                {
-                    return Problem("Błędne obecne hasło");
-                }
-
-
-                if (BCrypt.Net.BCrypt.Verify(request.NewPassword, user.Password))
-                {
-                    return Problem("Nowe hasło nie może być takie smao jak poprzednie");
-                }
-
-                user.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
-            }*/
             if (!String.IsNullOrEmpty(request.Name))
             {
                 user.Name = request.Name;
             }
+
             if (!String.IsNullOrEmpty(request.Surname))
             {
                 user.Surname = request.Surname;
             }
+
             if (!String.IsNullOrEmpty(request.PhoneNumber))
             {
                 user.PhoneNumber = request.PhoneNumber;
