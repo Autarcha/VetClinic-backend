@@ -4,9 +4,9 @@ using VetClinic_backend.Models;
 
 namespace VetClinic_backend.Data
 {
-    public class DataContext : DbContext
+    public class RepositoryContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
+        public RepositoryContext(DbContextOptions<RepositoryContext> options) : base(options)
         {
 
         }

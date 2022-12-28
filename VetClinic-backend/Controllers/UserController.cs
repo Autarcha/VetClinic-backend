@@ -40,7 +40,8 @@ namespace VetClinic_backend.Controllers
             {
                 request = request.Where(x => x.Role == Role.User);
             }
-            return Ok(_mapper.Map<IEnumerable<UserDto>>(request));
+            var result = await request.ToListAsync();
+            return Ok(_mapper.Map<IEnumerable<UserDto>>(result));
         }
 
         [HttpPut("{userId}")]
@@ -81,7 +82,6 @@ namespace VetClinic_backend.Controllers
             }
 
             var result = await _userRepository.UpdateUser(user);
-
             return Ok(_mapper.Map<UserDto>(result));
 
         }
@@ -109,7 +109,6 @@ namespace VetClinic_backend.Controllers
             userRegisterMap.Role = Role.User;
             await _userRepository.AddUser(userRegisterMap);
             await _emailService.SendPasswordMail(userRegisterMap, userPassword);
-            await _userRepository.SaveChangesAsync();
             return Ok(_mapper.Map<UserDto>(userRegisterMap));
         }
 
@@ -119,18 +118,18 @@ namespace VetClinic_backend.Controllers
         public async Task<ActionResult<UserDto>> LoginUser(UserLoginDto loginData)
         {
             var userLoginMap = _mapper.Map<User>(loginData);
-            var result = _userRepository.LoginUser(userLoginMap.Email, userLoginMap.Password);
+            var result = await _userRepository.LoginUser(userLoginMap.Email, userLoginMap.Password);
 
-            if(result.Result is null)
+            if(result is null)
             {
                 ModelState.AddModelError("", "Podano błędne dane logowania");
                 return StatusCode(403, ModelState);
             }
 
-            var token = _jwtAuthenctiaction.GenerateAuthenticationToken(result.Result);
+            var token = _jwtAuthenctiaction.GenerateAuthenticationToken(result);
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "AuthToken");
             HttpContext.Response.Headers.Add("AuthToken", token);
-            return Ok(_mapper.Map<UserDto>(result.Result));
+            return Ok(_mapper.Map<UserDto>(result));
         }
 
     }
