@@ -36,11 +36,54 @@ namespace VetClinic_backend.Controllers
             var userRole = Enum.Parse<Role>(User.Claims.First(x => x.Type == "userRole").Value);
             var request = _userRepository.GetAllUsers();
 
-            if(userRole != Role.Admin)
+            if (userRole != Role.Admin)
             {
                 request = request.Where(x => x.Role == Role.User);
             }
             return Ok(_mapper.Map<IEnumerable<UserDto>>(request));
+        }
+
+        [HttpPut("{userId}")]
+        public async Task<ActionResult<UserDto>> UpdateUser([FromRoute] int userId, UserDetailsDto request)
+        {
+
+            var user = await _userRepository.GetUserById(userId);
+
+            if (user is null)
+            {
+                ModelState.AddModelError("", "Nie znaleziono takiego użytkownika");
+                return StatusCode(404, ModelState);
+            }
+
+            if (!String.IsNullOrEmpty(request.Email))
+            {
+                var checkIfExist = await _userRepository.GetUserByEmail(request.Email);
+                if (checkIfExist is not null && user.Email != request.Email)
+                {
+                    return Problem("Zarejestrowano juz konto na ten mail");
+                }
+                user.Email = request.Email;
+            }
+
+            if (!String.IsNullOrEmpty(request.Name))
+            {
+                user.Name = request.Name;
+            }
+
+            if (!String.IsNullOrEmpty(request.Surname))
+            {
+                user.Surname = request.Surname;
+            }
+
+            if (!String.IsNullOrEmpty(request.PhoneNumber))
+            {
+                user.PhoneNumber = request.PhoneNumber;
+            }
+
+            var result = await _userRepository.UpdateUser(user);
+
+            return Ok(_mapper.Map<UserDto>(result));
+
         }
 
         [HttpPost("Register", Name = "RegisterUser")]
