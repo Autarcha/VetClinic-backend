@@ -60,5 +60,12 @@ namespace VetClinic_backend.Repositories
             }
             return null;
         }
+
+        public async Task<User?> DeleteUser(User user)
+        {
+            await RemoveAsync(user);
+            await SaveChangesAsync();
+            return user;
+        }
     }
 }

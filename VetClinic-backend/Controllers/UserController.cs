@@ -86,6 +86,23 @@ namespace VetClinic_backend.Controllers
 
         }
 
+        [HttpDelete("{userId}")]
+        public async Task<ActionResult<UserDto>> DeleteUser([FromRoute] int userId)
+        {
+
+            var user = await _userRepository.GetUserById(userId);
+
+            if (user is null)
+            {
+                ModelState.AddModelError("", "Nie znaleziono takiego użytkownika");
+                return StatusCode(404, ModelState);
+            }
+
+            var result = await _userRepository.DeleteUser(user);
+            return Ok(_mapper.Map<UserDto>(result));
+
+        }
+
         [HttpPost("Register", Name = "RegisterUser")]
         [ProducesResponseType(200, Type = typeof(UserDto))]
         public async Task<ActionResult<UserDto>> RegisterUser(UserDetailsDto userRegisterData)
