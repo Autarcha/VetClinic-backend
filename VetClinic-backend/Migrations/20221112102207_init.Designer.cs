@@ -10,7 +10,7 @@ using VetClinic_backend.Data;
 
 namespace VetClinic_backend.Migrations
 {
-    [DbContext(typeof(DataContext))]
+    [DbContext(typeof(RepositoryContext))]
     [Migration("20221112102207_init")]
     partial class init
     {

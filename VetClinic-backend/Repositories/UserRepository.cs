@@ -6,43 +6,43 @@ using VetClinic_backend.Models;
 
 namespace VetClinic_backend.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : Repository<User>, IUserRepository
     {
-        private readonly DataContext _context;
         
-        public UserRepository(DataContext context)
-        {
-            _context = context;
-        }
+        public UserRepository(RepositoryContext context) : base(context) { }
+
 
         public IQueryable<User>? GetAllUsers()
         {
-            return _context.Users.OrderBy(u => u.Id);
+            var result = GetAll().OrderBy(x => x.Id);
+            return result;
         }
 
-        public async Task<User?> GetUserByName(string name, string surname)
+        public async Task<User?> GetUserByEmail(string email)
         {
-            var result = await _context.Users.FirstOrDefaultAsync(u => u.Name == name && u.Surname == surname);
+            var result = await GetAll().FirstOrDefaultAsync(u => u.Email == email);
             return result;
         }
 
 
         public async Task<User?> GetUserById(int id)
         {
-        var result = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+        var result = await GetAll().FirstOrDefaultAsync(u => u.Id == id);
         return result;
         }
 
         public async Task<User?> AddUser(User user)
         {
-            var newUser = await _context.Users.AddAsync(user);
-            return newUser.Entity;
+            var newUser = await AddAsync(user);
+            await SaveChangesAsync();
+            return newUser;
         }
 
         public async Task<User?> UpdateUser(User user)
         {
-            var updateUser = _context.Users.Update(user);
-            return updateUser.Entity;
+            var updateUser = UpdateAsync(user);
+            await SaveChangesAsync();
+            return updateUser.Result;
         }
 
         public async Task<User?> LoginUser(string email, string password)
@@ -61,9 +61,11 @@ namespace VetClinic_backend.Repositories
             return null;
         }
 
-        public async Task<bool> SaveChangesAsync()
+        public async Task<User?> DeleteUser(User user)
         {
-            return await _context.SaveChangesAsync() >= 0;
+            await RemoveAsync(user);
+            await SaveChangesAsync();
+            return user;
         }
     }
 }

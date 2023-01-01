@@ -23,7 +23,7 @@ namespace VetClinic_backend.Authentication
                     new[]
                     {
                         new Claim("id", user.Id.ToString()),
-                        new Claim("role", user.Role.ToString()),
+                        new Claim("userRole", user.Role.ToString()),
                     }),
                 Expires = DateTime.UtcNow.AddHours(36),
                 SigningCredentials = new SigningCredentials(

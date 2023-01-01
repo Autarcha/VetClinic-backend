@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using VetClinic_backend.Models;
 
-namespace VetClinic_backend.Dto
+namespace VetClinic_backend.Dto.UserDto
 {
-    public class UserUpdateDto
+    public class UserDetailsDto
     {
         [Required(AllowEmptyStrings = true)]
         [DefaultValue("")]
@@ -22,16 +23,12 @@ namespace VetClinic_backend.Dto
 
         [Required(AllowEmptyStrings = true)]
         [DefaultValue("")]
-        public string? OldPassword { get; set; }
-
-        [Required(AllowEmptyStrings = true)]
-        [DefaultValue("")]
-        [RegularExpression(@"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")]
-        public string? NewPassword { get; set; }
-
-        [Required(AllowEmptyStrings = true)]
-        [DefaultValue("")]
         [RegularExpression(@"^[0-9]{9,9}$")]
         public string? PhoneNumber { get; set; }
+
+        [Required]
+        [DefaultValue(4)]
+        public int Role { get; set; }
+
     }
 }

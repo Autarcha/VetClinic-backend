@@ -9,7 +9,7 @@ using VetClinic_backend.Data;
 
 namespace VetClinic_backend.Migrations
 {
-    [DbContext(typeof(DataContext))]
+    [DbContext(typeof(RepositoryContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

@@ -5,8 +5,10 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using VetClinic_backend.Authentication;
 using VetClinic_backend.Data;
+using VetClinic_backend.Factories;
 using VetClinic_backend.Interfaces;
 using VetClinic_backend.Repositories;
+using VetClinic_backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,9 @@ builder.Services.AddCors();
 //User repository
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddSingleton<IEmailMessageFactory, EmailMessageFactory>();
+builder.Services.AddSingleton<IEmailService, EmailService>();
+builder.Services.AddSingleton<IGeneratePassword, GeneratePasswordService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -48,7 +53,7 @@ builder.Services.AddSwaggerGen(c =>
 
 });
 
-builder.Services.AddDbContext<DataContext>(options =>
+builder.Services.AddDbContext<RepositoryContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
