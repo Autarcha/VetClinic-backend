@@ -28,6 +28,6 @@ namespace VetClinic_backend.Dto.UserDto
         [MinLength(9)]
         public string PhoneNumber { get; set; }
 
-        public Role Role { get; set;}
+        public int Role { get; set;}
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using VetClinic_backend.Models;
 
 namespace VetClinic_backend.Dto.UserDto
 {
@@ -24,5 +25,10 @@ namespace VetClinic_backend.Dto.UserDto
         [DefaultValue("")]
         [RegularExpression(@"^[0-9]{9,9}$")]
         public string? PhoneNumber { get; set; }
+
+        [Required]
+        [DefaultValue(4)]
+        public int Role { get; set; }
+
     }
 }

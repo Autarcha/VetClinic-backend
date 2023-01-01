@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Ocsp;
 using VetClinic_backend.Authentication;
 using VetClinic_backend.Dto.UserDto;
 using VetClinic_backend.Interfaces;
@@ -81,6 +82,10 @@ namespace VetClinic_backend.Controllers
                 user.PhoneNumber = request.PhoneNumber;
             }
 
+            user.Role = Enum.Parse<Role>(request.Role.ToString());
+
+
+
             var result = await _userRepository.UpdateUser(user);
             return Ok(_mapper.Map<UserDto>(result));
 
@@ -107,7 +112,9 @@ namespace VetClinic_backend.Controllers
         [ProducesResponseType(200, Type = typeof(UserDto))]
         public async Task<ActionResult<UserDto>> RegisterUser(UserDetailsDto userRegisterData)
         {
-            if(userRegisterData == null)
+            var employeeRole = Enum.Parse<Role>(User.Claims.First(x => x.Type == "userRole").Value);
+
+            if (userRegisterData == null)
             {
                 return BadRequest(ModelState);
             }
@@ -121,9 +128,16 @@ namespace VetClinic_backend.Controllers
 
             var userPassword = _generatePassword.GenerateRandomCode();
 
+            if (employeeRole != Role.Admin)
+            {
+                userRegisterData.Role = 4;
+            }
+
+            Enum.Parse<Role>(userRegisterData.Role.ToString());
+
             var userRegisterMap = _mapper.Map<User>(userRegisterData);
             userRegisterMap.Password = BCrypt.Net.BCrypt.HashPassword(userPassword);
-            userRegisterMap.Role = Role.User;
+
             await _userRepository.AddUser(userRegisterMap);
             await _emailService.SendPasswordMail(userRegisterMap, userPassword);
             return Ok(_mapper.Map<UserDto>(userRegisterMap));
