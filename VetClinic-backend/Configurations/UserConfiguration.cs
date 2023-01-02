@@ -42,7 +42,7 @@ namespace VetClinic_backend.Configurations
             builder.Property(x => x.Role)
                 .HasColumnName("Role")
                 .HasColumnType("int")
-                .HasDefaultValue(Role.User);
+                .HasDefaultValue(Role.Customer);
 
         }
     }

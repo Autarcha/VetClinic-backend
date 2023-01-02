@@ -39,7 +39,7 @@ namespace VetClinic_backend.Controllers
 
             if (userRole != Role.Admin)
             {
-                request = request.Where(x => x.Role == Role.User);
+                request = request.Where(x => x.Role == Role.Customer);
             }
             var result = await request.ToListAsync();
             return Ok(_mapper.Map<IEnumerable<UserDto>>(result));
@@ -107,7 +107,7 @@ namespace VetClinic_backend.Controllers
             return Ok(_mapper.Map<UserDto>(result));
 
         }
-
+        [AllowAnonymous]
         [HttpPost("Register", Name = "RegisterUser")]
         [ProducesResponseType(200, Type = typeof(UserDto))]
         public async Task<ActionResult<UserDto>> RegisterUser(UserDetailsDto userRegisterData)
