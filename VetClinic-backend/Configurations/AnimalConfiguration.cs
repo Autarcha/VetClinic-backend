@@ -26,18 +26,17 @@ namespace VetClinic_backend.Configurations
 
             builder.Property(x => x.Name)
                 .HasColumnName("Name")
-                .HasColumnType("nvarchar(MAX)")
-                .IsRequired();
-
-            builder.Property(x => x.Age)
-                .HasColumnName("Age")
-                .HasColumnType("int")
+                .HasColumnType("nvarchar(30)")
                 .IsRequired();
 
             builder.Property(x => x.Specie)
                 .HasColumnName("Specie")
-                .HasColumnType("nvarchar(MAX)")
+                .HasColumnType("nvarchar(60)")
                 .IsRequired();
+
+            builder.Property(x => x.AdditionalInfo)
+                .HasColumnName("AdditionalInfo")
+                .HasColumnType("nvarchar(MAX)");               
 
         }
     }

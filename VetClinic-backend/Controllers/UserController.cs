@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Ocsp;
 using VetClinic_backend.Authentication;
-using VetClinic_backend.Dto.UserDto;
+using VetClinic_backend.Dto.User;
 using VetClinic_backend.Interfaces;
 using VetClinic_backend.Models;
 

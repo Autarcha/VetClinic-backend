@@ -1,6 +1,6 @@
 ﻿using VetClinic_backend.Models;
 using AutoMapper;
-using VetClinic_backend.Dto.UserDto;
+using VetClinic_backend.Dto.User;
 
 namespace VetClinic_backend.Profiles
 {
