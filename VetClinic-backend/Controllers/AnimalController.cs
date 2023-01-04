@@ -30,7 +30,15 @@ namespace VetClinic_backend.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<AnimalDto>))]
         public async Task<ActionResult<IEnumerable<AnimalDto>>> GetAllAnimals()
         {
+            var userId = int.Parse(User.Claims.First(x => x.Type == "id").Value);
+            var userRole = Enum.Parse<Role>(User.Claims.First(x => x.Type == "userRole").Value);
             var request = _animalRepository.GetAllAnimals();
+
+
+            if (userRole == Role.Customer)
+            {
+                request = request.Where(x => x.Owner.Id == userId);
+            }
 
             var result = await request.ToListAsync();
             return Ok(_mapper.Map<IEnumerable<AnimalDto>>(result));
