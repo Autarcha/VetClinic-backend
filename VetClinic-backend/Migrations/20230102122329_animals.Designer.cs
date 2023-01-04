@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VetClinic_backend.Data;
 
@@ -10,9 +11,10 @@ using VetClinic_backend.Data;
 namespace VetClinic_backend.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230102122329_animals")]
+    partial class animals
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,13 +32,13 @@ namespace VetClinic_backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("AdditionalInfo")
-                        .HasColumnType("nvarchar(MAX)")
-                        .HasColumnName("AdditionalInfo");
+                    b.Property<int>("Age")
+                        .HasColumnType("int")
+                        .HasColumnName("Age");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(30)")
+                        .HasColumnType("nvarchar(MAX)")
                         .HasColumnName("Name");
 
                     b.Property<int>("Owner_id")
@@ -44,7 +46,7 @@ namespace VetClinic_backend.Migrations
 
                     b.Property<string>("Specie")
                         .IsRequired()
-                        .HasColumnType("nvarchar(60)")
+                        .HasColumnType("nvarchar(MAX)")
                         .HasColumnName("Specie");
 
                     b.HasKey("Id");

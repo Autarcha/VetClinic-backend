@@ -12,10 +12,12 @@ namespace VetClinic_backend.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Animal> Animals { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration<User>(new UserConfiguration());
+            modelBuilder.ApplyConfiguration<Animal>(new AnimalConfiguration());
         }
     }
 }

@@ -19,6 +19,7 @@ builder.Services.AddControllers();
 builder.Services.AddCors();
 //User repository
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAnimalRepository, AnimalRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddSingleton<IEmailMessageFactory, EmailMessageFactory>();
 builder.Services.AddSingleton<IEmailService, EmailService>();

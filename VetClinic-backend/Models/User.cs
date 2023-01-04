@@ -9,7 +9,7 @@ namespace VetClinic_backend.Models
     {
         Admin = 1,
         Employee = 2,
-        User = 4
+        Customer = 4
     }
     public class User
     {
@@ -20,10 +20,8 @@ namespace VetClinic_backend.Models
         public string Email { get; set; }
         public string Password { get; set; }
         public string PhoneNumber { get; set; }
-        public string? City { get; set; }
-        public string? Street { get; set; }
-        public string? HouseNumber { get; set; }
-        public string? PostCode { get; set; }
         public Role Role { get; set; }
+
+        public ICollection<Animal> Animals { get; set; }
     }
 }

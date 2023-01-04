@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 
-namespace VetClinic_backend.Dto.UserDto
+namespace VetClinic_backend.Dto.User
 {
     public class UserChangePasswordDto
     {

@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Ocsp;
 using VetClinic_backend.Authentication;
-using VetClinic_backend.Dto.UserDto;
+using VetClinic_backend.Dto.User;
 using VetClinic_backend.Interfaces;
 using VetClinic_backend.Models;
 
@@ -39,7 +38,7 @@ namespace VetClinic_backend.Controllers
 
             if (userRole != Role.Admin)
             {
-                request = request.Where(x => x.Role == Role.User);
+                request = request.Where(x => x.Role == Role.Customer);
             }
             var result = await request.ToListAsync();
             return Ok(_mapper.Map<IEnumerable<UserDto>>(result));
@@ -107,7 +106,7 @@ namespace VetClinic_backend.Controllers
             return Ok(_mapper.Map<UserDto>(result));
 
         }
-
+        [AllowAnonymous]
         [HttpPost("Register", Name = "RegisterUser")]
         [ProducesResponseType(200, Type = typeof(UserDto))]
         public async Task<ActionResult<UserDto>> RegisterUser(UserDetailsDto userRegisterData)

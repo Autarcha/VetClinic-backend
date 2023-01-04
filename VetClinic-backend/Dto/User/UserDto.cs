@@ -1,6 +1,6 @@
 ﻿using VetClinic_backend.Models;
 
-namespace VetClinic_backend.Dto.UserDto
+namespace VetClinic_backend.Dto.User
 {
     public class UserDto
     {
