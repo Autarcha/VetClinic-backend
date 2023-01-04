@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Ocsp;
 using VetClinic_backend.Dto.Visit;
 using VetClinic_backend.Interfaces;
 using VetClinic_backend.Models;
@@ -63,6 +64,38 @@ namespace VetClinic_backend.Controllers
                 VisitDateTime = visitBody.VisitDateTime, VisitStatus = visitBody.VisitStatus
             };
             var result = await _visitRepository.AddVisit(visit);
+
+            return Ok(_mapper.Map<VisitDto>(result));
+        }
+
+        [HttpPut("{visitId}")]
+        [ProducesResponseType(200, Type = typeof(VisitDto))]
+
+        public async Task<ActionResult<VisitDto>> UpdateVisit([FromRoute] int visitId, VisitUpdateDto request)
+        {
+            var visit = await _visitRepository.GetVisitById(visitId);
+            var employee = await _userRepository.GetUserById(request.EmployeeId);
+            Animal? animal = null;
+
+            if (visit is null)
+            {
+                ModelState.AddModelError("", "Nie znaleziono wizyty o podanym ID");
+                return StatusCode(404, ModelState);
+            }
+
+            if (request.AnimalID.HasValue)
+            {
+                animal = await _animalRepository.GetAnimalById(request.AnimalID.Value);
+                visit.Animal = animal;
+            }
+
+            visit.Employee = employee;
+
+            visit.VisitDateTime = request.VisitDateTime;
+
+            visit.VisitStatus = request.VisitStatus;
+
+            var result = await _visitRepository.UpdateVisit(visit);
 
             return Ok(_mapper.Map<VisitDto>(result));
         }

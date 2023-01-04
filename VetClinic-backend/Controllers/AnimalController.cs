@@ -44,6 +44,16 @@ namespace VetClinic_backend.Controllers
             return Ok(_mapper.Map<IEnumerable<AnimalDto>>(result));
         }
 
+        [HttpGet("{customerId}")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<AnimalDto>))]
+        public async Task<ActionResult<IEnumerable<AnimalDto>>> GetAllCustomerAnimals([FromRoute] int customerId)
+        {
+            var request = _animalRepository.GetAllAnimals().Where(x => x.Owner.Id == customerId);
+
+            var result = await request.ToListAsync();
+            return Ok(_mapper.Map<IEnumerable<AnimalDto>>(result));
+        }
+
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(AnimalDto))]
 
@@ -78,7 +88,7 @@ namespace VetClinic_backend.Controllers
                 animal.Specie = request.Specie;
             }
 
-            if (!String.IsNullOrEmpty(request.Specie))
+            if (!String.IsNullOrEmpty(request.AdditionalInfo))
             {
                 animal.AdditionalInfo = request.AdditionalInfo;
             }

@@ -44,6 +44,16 @@ namespace VetClinic_backend.Controllers
             return Ok(_mapper.Map<IEnumerable<UserDto>>(result));
         }
 
+        [HttpGet("Employees")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<UserDto>))]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetAllEmployees()
+        {
+            var request = _userRepository.GetAllUsers().Where(x => x.Role != Role.Customer);
+
+            var result = await request.ToListAsync();
+            return Ok(_mapper.Map<IEnumerable<UserDto>>(result));
+        }
+
         [HttpPut("{userId}")]
         public async Task<ActionResult<UserDto>> UpdateUser([FromRoute] int userId, UserDetailsDto request)
         {
