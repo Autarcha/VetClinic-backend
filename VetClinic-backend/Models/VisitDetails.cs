@@ -1,8 +1,12 @@
-﻿namespace VetClinic_backend.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace VetClinic_backend.Models
 {
     public class VisitDetails
     {
         public int Id { get; set; }
+        public int VisitId { get; set; }
+        [ForeignKey("VisitId")]
         public Visit Visit { get; set; }
         public string VisitPurpose { get; set; }
         public string Description { get; set; }

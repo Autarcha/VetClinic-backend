@@ -8,12 +8,6 @@ namespace VetClinic_backend.Configurations
     {
         public void Configure(EntityTypeBuilder<VisitDetails> builder)
         {
-
-            builder.ToTable("visitDetails")
-                .HasOne(vd => vd.Visit)
-                .WithOne(v => v.VisitDetails)
-                .HasForeignKey("Visit_id");
-
             builder.ToTable("visitDetails");
 
             builder.HasKey(vd => vd.Id);

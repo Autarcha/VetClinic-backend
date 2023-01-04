@@ -7,6 +7,7 @@
         public string Name { get; set; }
         public string Specie { get; set; }
         public string? AdditionalInfo { get; set; }
+        public ICollection<Visit> Visits { get; set; }
 
     }
 }

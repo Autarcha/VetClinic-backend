@@ -11,26 +11,20 @@ namespace VetClinic_backend.Configurations
 
             builder.ToTable("users")
                 .HasOne(v => v.Employee)
-                .WithMany(u => u.Visits)
-                .HasForeignKey("Employee_id")
-                .IsRequired();
+                .WithMany(u => u.EmployeeVisits);
 
             builder.ToTable("users")
                 .HasOne(v => v.Customer)
-                .WithMany(u => u.Visits)
-                .HasForeignKey("Customer_id")
-                .IsRequired();
+                .WithMany(u => u.CustomerVisits);
 
             builder.ToTable("animals")
                 .HasOne(v => v.Animal)
                 .WithMany(a => a.Visits)
-                .HasForeignKey("Animal_id");
+                .HasForeignKey("AnimalId");
 
             builder.ToTable("visitDetails")
                 .HasOne(v => v.VisitDetails)
-                .WithOne(vd => vd.Visit)
-                .HasForeignKey("VisitDetails_id");
-
+                .WithOne(vd => vd.Visit);
 
             builder.ToTable("visits");
 
