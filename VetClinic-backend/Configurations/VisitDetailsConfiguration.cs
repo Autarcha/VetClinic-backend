@@ -17,6 +17,11 @@ namespace VetClinic_backend.Configurations
                 .HasColumnType("int")
                 .ValueGeneratedOnAdd();
 
+            builder.Property(vd => vd.VisitId)
+                .HasColumnName("VisitId")
+                .HasColumnType("int")
+                .IsRequired();
+
             builder.Property(vd => vd.VisitPurpose)
                 .HasColumnName("VisitPurpose")
                 .HasColumnType("varchar(60)")
@@ -38,6 +43,11 @@ namespace VetClinic_backend.Configurations
             builder.Property(vd => vd.Recommendations)
                 .HasColumnName("Recommendations")
                 .HasColumnType("varchar(MAX)");
+
+            builder.Property(vd => vd.Bill)
+                .HasColumnName("Bill")
+                .HasColumnType("double precision")
+                .IsRequired();
         }
     }
 }
