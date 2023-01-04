@@ -106,7 +106,7 @@ namespace VetClinic_backend.Controllers
             return Ok(_mapper.Map<UserDto>(result));
 
         }
-        [AllowAnonymous]
+
         [HttpPost("Register", Name = "RegisterUser")]
         [ProducesResponseType(200, Type = typeof(UserDto))]
         public async Task<ActionResult<UserDto>> RegisterUser(UserDetailsDto userRegisterData)

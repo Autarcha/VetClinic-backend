@@ -12,7 +12,7 @@ namespace VetClinic_backend.Repositories
 
         public IQueryable<Visit>? GetAllVisits()
         {
-            var result = GetAll().Include(x => x.Customer).Include(x => x.Employee).Include(x => x.VisitDetails).OrderBy(x => x.Id);
+            var result = GetAll().Include(v => v.Customer).Include(v => v.Employee).Include(v => v.VisitDetails).OrderBy(v => v.Id);
             return result;
         }
 

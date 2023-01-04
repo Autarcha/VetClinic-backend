@@ -14,7 +14,7 @@ namespace VetClinic_backend.Repositories
 
         public IQueryable<User>? GetAllUsers()
         {
-            var result = GetAll().OrderBy(x => x.Id);
+            var result = GetAll().OrderBy(u => u.Id);
             return result;
         }
 
@@ -48,7 +48,7 @@ namespace VetClinic_backend.Repositories
         public async Task<User?> LoginUser(string email, string password)
         {
             var users = GetAllUsers();
-            var result = await users.FirstOrDefaultAsync(x => x.Email == email);
+            var result = await users.FirstOrDefaultAsync(u => u.Email == email);
             if (result is null)
                 return result;
 

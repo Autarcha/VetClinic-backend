@@ -1,4 +1,5 @@
-﻿using VetClinic_backend.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using VetClinic_backend.Data;
 using VetClinic_backend.Interfaces;
 using VetClinic_backend.Models;
 
@@ -11,7 +12,8 @@ namespace VetClinic_backend.Repositories
 
         public async Task<VisitDetails?> GetVisitDetailsByVisitId(int visitId)
         {
-            throw new NotImplementedException();
+            var result = await GetAll().FirstOrDefaultAsync(vd => vd.VisitId == visitId);
+            return result;
         }
         public async Task<VisitDetails?> AddVisitDetails(VisitDetails visitDetails)
         {
