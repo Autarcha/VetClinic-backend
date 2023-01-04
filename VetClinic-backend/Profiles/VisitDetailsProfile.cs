@@ -10,7 +10,6 @@ namespace VetClinic_backend.Profiles
         {
             CreateMap<VisitDetails, VisitDetailsDto>();
             CreateMap<VisitDetailsDto, VisitDetails>();
-            CreateMap<VisitDetailsAddDto, VisitDetails>();
         }
     }
 }

@@ -10,11 +10,6 @@ namespace VetClinic_backend.Repositories
 
         public VisitDetailsRepository(RepositoryContext context) : base(context) { }
 
-        public async Task<VisitDetails?> GetVisitDetailsByVisitId(int visitId)
-        {
-            var result = await GetAll().FirstOrDefaultAsync(vd => vd.VisitId == visitId);
-            return result;
-        }
         public async Task<VisitDetails?> AddVisitDetails(VisitDetails visitDetails)
         {
             var newVisitDetails = await AddAsync(visitDetails);

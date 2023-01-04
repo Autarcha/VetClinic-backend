@@ -12,7 +12,7 @@ namespace VetClinic_backend.Repositories
         public UserRepository(RepositoryContext context) : base(context) { }
 
 
-        public IQueryable<User>? GetAllUsers()
+        public IQueryable<User> GetAllUsers()
         {
             var result = GetAll().OrderBy(u => u.Id);
             return result;
@@ -40,9 +40,9 @@ namespace VetClinic_backend.Repositories
 
         public async Task<User?> UpdateUser(User user)
         {
-            var updateUser = UpdateAsync(user);
+            var updateUser = await UpdateAsync(user);
             await SaveChangesAsync();
-            return updateUser.Result;
+            return updateUser;
         }
 
         public async Task<User?> LoginUser(string email, string password)

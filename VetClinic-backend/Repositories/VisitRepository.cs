@@ -10,7 +10,7 @@ namespace VetClinic_backend.Repositories
 
         public VisitRepository(RepositoryContext context) : base(context) { }
 
-        public IQueryable<Visit>? GetAllVisits()
+        public IQueryable<Visit> GetAllVisits()
         {
             var result = GetAll().Include(v => v.Customer).Include(v => v.Employee).Include(v => v.VisitDetails).OrderBy(v => v.VisitDateTime);
             return result;

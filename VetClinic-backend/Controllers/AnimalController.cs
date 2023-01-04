@@ -48,6 +48,13 @@ namespace VetClinic_backend.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<AnimalDto>))]
         public async Task<ActionResult<IEnumerable<AnimalDto>>> GetAllCustomerAnimals([FromRoute] int customerId)
         {
+            var userRole = Enum.Parse<Role>(User.Claims.First(x => x.Type == "userRole").Value);
+
+            if (userRole > Role.Employee)
+            {
+                return Forbid();
+            }
+
             var request = _animalRepository.GetAllAnimals().Where(x => x.Owner.Id == customerId);
 
             var result = await request.ToListAsync();
@@ -57,9 +64,22 @@ namespace VetClinic_backend.Controllers
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(AnimalDto))]
 
-        public async Task<ActionResult<AnimalDto>> AddAnimal(AnimalDetailsDto animalDetails)
+        public async Task<ActionResult<AnimalDto>> AddAnimal(AnimalAddDto animalDetails)
         {
+            var userRole = Enum.Parse<Role>(User.Claims.First(x => x.Type == "userRole").Value);
+
+            if (userRole > Role.Employee)
+            {
+                return Forbid();
+            }
+
             var owner = await _userRepository.GetUserById(animalDetails.OwnerID);
+
+            if(owner is null)
+            {
+                return NotFound("There isn't animal owner of provided id");
+            }
+
             var animal = new Animal { Name = animalDetails.Name, Owner = owner, Specie = animalDetails.Specie, AdditionalInfo = animalDetails.AdditionalInfo };
             var result = await _animalRepository.AddAnimal(animal);
             return Ok(_mapper.Map<AnimalDto>(result));
@@ -67,31 +87,29 @@ namespace VetClinic_backend.Controllers
 
         [HttpPut("{animalId}")]
 
-        public async Task<ActionResult<AnimalDto>> UpdateAnimal([FromRoute] int animalId, AnimalDetailsDto request)
+        public async Task<ActionResult<AnimalDto>> UpdateAnimal([FromRoute] int animalId, AnimalUpdateDto request)
         {
+
+            var userRole = Enum.Parse<Role>(User.Claims.First(x => x.Type == "userRole").Value);
+
+            if (userRole > Role.Employee)
+            {
+                return Forbid();
+            }
+
             var animal = await _animalRepository.GetAnimalById(animalId);
 
             if (animal is null)
             {
-                ModelState.AddModelError("", "Nie znaleziono zwierzęcia o podanym ID");
-                return StatusCode(404, ModelState);
+                return NotFound("There isn't any animal of provided id");
             }
 
 
-            if (!String.IsNullOrEmpty(request.Name))
-            {
-                animal.Name = request.Name;
-            }
+            animal.Name = request.Name ?? animal.Name;
 
-            if (!String.IsNullOrEmpty(request.Specie))
-            {
-                animal.Specie = request.Specie;
-            }
+            animal.Specie = request.Specie ?? animal.Specie;
 
-            if (!String.IsNullOrEmpty(request.AdditionalInfo))
-            {
-                animal.AdditionalInfo = request.AdditionalInfo;
-            }
+            animal.AdditionalInfo = request.AdditionalInfo ?? animal.AdditionalInfo;
 
             var result = await _animalRepository.UpdateAnimal(animal);
             return Ok(_mapper.Map<AnimalDto>(result));

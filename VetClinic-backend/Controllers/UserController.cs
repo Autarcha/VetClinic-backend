@@ -34,6 +34,11 @@ namespace VetClinic_backend.Controllers
         public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
         {
             var userRole = Enum.Parse<Role>(User.Claims.First(x => x.Type == "userRole").Value);
+
+            if (userRole > Role.Employee)
+            {
+                return Forbid();
+            }
             var request = _userRepository.GetAllUsers();
 
             if (userRole != Role.Admin)
@@ -48,6 +53,14 @@ namespace VetClinic_backend.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<UserDto>))]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetAllEmployees()
         {
+
+            var userRole = Enum.Parse<Role>(User.Claims.First(x => x.Type == "userRole").Value);
+
+            if (userRole > Role.Employee)
+            {
+                return Forbid();
+            }
+
             var request = _userRepository.GetAllUsers().Where(x => x.Role != Role.Customer);
 
             var result = await request.ToListAsync();
@@ -57,43 +70,44 @@ namespace VetClinic_backend.Controllers
         [HttpPut("{userId}")]
         public async Task<ActionResult<UserDto>> UpdateUser([FromRoute] int userId, UserDetailsDto request)
         {
+            var userRole = Enum.Parse<Role>(User.Claims.First(x => x.Type == "userRole").Value);
+
+            if (userRole > Role.Employee)
+            {
+                return Forbid();
+            }
 
             var user = await _userRepository.GetUserById(userId);
 
             if (user is null)
             {
-                ModelState.AddModelError("", "Nie znaleziono takiego użytkownika");
-                return StatusCode(404, ModelState);
+                return NotFound("Not found user of provided id");
             }
 
-            if (!String.IsNullOrEmpty(request.Email))
+            if(request.Email is not null)
             {
                 var checkIfExist = await _userRepository.GetUserByEmail(request.Email);
+
                 if (checkIfExist is not null && user.Email != request.Email)
                 {
-                    return Problem("Zarejestrowano juz konto na ten mail");
+                    return Forbid();
                 }
-                user.Email = request.Email;
             }
 
-            if (!String.IsNullOrEmpty(request.Name))
-            {
-                user.Name = request.Name;
-            }
+    
+            user.Email = request.Email ?? user.Email;
+                
+            user.Name = request.Name ?? user.Name;
 
-            if (!String.IsNullOrEmpty(request.Surname))
-            {
-                user.Surname = request.Surname;
-            }
+            user.Surname = request.Surname ?? user.Surname;
+           
+            user.PhoneNumber = request.PhoneNumber ?? user.PhoneNumber;
 
-            if (!String.IsNullOrEmpty(request.PhoneNumber))
-            {
-                user.PhoneNumber = request.PhoneNumber;
-            }
+            var role = user.Role;
 
-            user.Role = Enum.Parse<Role>(request.Role.ToString());
+            Enum.TryParse<Role>(request.Role?.ToString(), out role);
 
-
+            user.Role = role;
 
             var result = await _userRepository.UpdateUser(user);
             return Ok(_mapper.Map<UserDto>(result));
@@ -103,13 +117,18 @@ namespace VetClinic_backend.Controllers
         [HttpDelete("{userId}")]
         public async Task<ActionResult<UserDto>> DeleteUser([FromRoute] int userId)
         {
+            var userRole = Enum.Parse<Role>(User.Claims.First(x => x.Type == "userRole").Value);
+
+            if (userRole > Role.Admin)
+            {
+                return Forbid();
+            }
 
             var user = await _userRepository.GetUserById(userId);
 
             if (user is null)
             {
-                ModelState.AddModelError("", "Nie znaleziono takiego użytkownika");
-                return StatusCode(404, ModelState);
+                return NotFound("Not found user of provided id");
             }
 
             var result = await _userRepository.DeleteUser(user);
@@ -121,17 +140,25 @@ namespace VetClinic_backend.Controllers
         [ProducesResponseType(200, Type = typeof(UserDto))]
         public async Task<ActionResult<UserDto>> RegisterUser(UserDetailsDto userRegisterData)
         {
+
             var employeeRole = Enum.Parse<Role>(User.Claims.First(x => x.Type == "userRole").Value);
 
-            if (userRegisterData == null)
+            if (employeeRole > Role.Admin)
+            {
+                return Forbid();
+            }
+
+            if (userRegisterData is null)
             {
                 return BadRequest(ModelState);
             }
+
             var users = _userRepository.GetAllUsers();
+
             var withEmail = await users.FirstOrDefaultAsync(u => u.Email == userRegisterData.Email);
             if (withEmail is not null)
             {
-                ModelState.AddModelError("", "Konto z takim adresem email zostało już utworzone");
+                ModelState.AddModelError("", "Account with that email already exists");
                 return StatusCode(422, ModelState);
             }
 
@@ -141,8 +168,6 @@ namespace VetClinic_backend.Controllers
             {
                 userRegisterData.Role = 4;
             }
-
-            Enum.Parse<Role>(userRegisterData.Role.ToString());
 
             var userRegisterMap = _mapper.Map<User>(userRegisterData);
             userRegisterMap.Password = BCrypt.Net.BCrypt.HashPassword(userPassword);
@@ -162,8 +187,7 @@ namespace VetClinic_backend.Controllers
 
             if(result is null)
             {
-                ModelState.AddModelError("", "Podano błędne dane logowania");
-                return StatusCode(403, ModelState);
+                return Forbid("Provided wrong login credentials");
             }
 
             var token = _jwtAuthenctiaction.GenerateAuthenticationToken(result);

@@ -17,11 +17,6 @@ namespace VetClinic_backend.Configurations
                 .HasColumnType("int")
                 .ValueGeneratedOnAdd();
 
-            builder.Property(vd => vd.VisitId)
-                .HasColumnName("VisitId")
-                .HasColumnType("int")
-                .IsRequired();
-
             builder.Property(vd => vd.VisitPurpose)
                 .HasColumnName("VisitPurpose")
                 .HasColumnType("varchar(60)")

@@ -1,21 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
-using VetClinic_backend.Models;
 
 namespace VetClinic_backend.Dto.Animal
 {
-    public class AnimalDetailsDto
+    public class AnimalAddDto
     {
-        [Required(AllowEmptyStrings = true)]
-        [DefaultValue("")]
+
         [RegularExpression(@"^[a-zA-ZąęółżźćńśĄĘÓŻŹĆŃŁŚ ]{3,60}")]
         public string Name { get; set; }
         [Required]
         public int OwnerID { get; set; }
 
-        [Required]
+        [MaxLength(50)]
         public string Specie { get; set; }
-
+        [MaxLength(500)]
         public string? AdditionalInfo { get; set; }
 
     }

@@ -9,7 +9,7 @@ namespace VetClinic_backend.Repositories
     {
         public AnimalRepository(RepositoryContext context) : base(context) { }
 
-        public IQueryable<Animal>? GetAllAnimals()
+        public IQueryable<Animal> GetAllAnimals()
         {
             var result = GetAll().Include(a => a.Owner).OrderBy(a => a.Id);
             return result;

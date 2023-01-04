@@ -23,8 +23,7 @@ namespace VetClinic_backend.Configurations
                 .HasForeignKey("AnimalId");
 
             builder.ToTable("visitDetails")
-                .HasOne(v => v.VisitDetails)
-                .WithOne(vd => vd.Visit);
+                .HasOne(v => v.VisitDetails);
 
             builder.ToTable("visits");
 

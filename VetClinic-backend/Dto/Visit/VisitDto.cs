@@ -11,7 +11,7 @@ namespace VetClinic_backend.Dto.Visit
         public int Id { get; set; }
         public UserDto Employee { get; set; }
         public UserDto Customer { get; set; }
-        public AnimalDto Animal { get; set; }
+        public AnimalDto? Animal { get; set; }
         public DateTime VisitDateTime { get; set; }
         public VisitStatus VisitStatus { get; set; }
         public VisitDetailsDto? VisitDetails { get; set; }

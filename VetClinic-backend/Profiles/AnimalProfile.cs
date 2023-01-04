@@ -8,8 +8,8 @@ namespace VetClinic_backend.Profiles
     {
         public AnimalProfile()
         {
-            CreateMap<Animal, AnimalDetailsDto>();
-            CreateMap<AnimalDetailsDto, Animal>();
+            CreateMap<Animal, AnimalAddDto>();
+            CreateMap<AnimalAddDto, Animal>();
             CreateMap<Animal, AnimalDto>();
             CreateMap<AnimalDto, Animal>();
         }

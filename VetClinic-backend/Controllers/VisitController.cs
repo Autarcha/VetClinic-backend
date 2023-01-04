@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Ocsp;
 using VetClinic_backend.Dto.Visit;
 using VetClinic_backend.Interfaces;
 using VetClinic_backend.Models;
@@ -36,7 +35,7 @@ namespace VetClinic_backend.Controllers
             var userRole = Enum.Parse<Role>(User.Claims.First(x => x.Type == "userRole").Value);
             var request = _visitRepository.GetAllVisits();
 
-            if (userRole != Role.Admin)
+            if (userRole == Role.Customer)
             {
                 request = request.Where(x => x.CustomerId == userId);
             }
@@ -49,8 +48,27 @@ namespace VetClinic_backend.Controllers
 
         public async Task<ActionResult<VisitDto>> AddVisit(VisitAddDto visitBody)
         {
+
+            var userRole = Enum.Parse<Role>(User.Claims.First(x => x.Type == "userRole").Value);
+
+            if (userRole > Role.Employee)
+            {
+                return Forbid();
+            }
+
             var customer = await _userRepository.GetUserById(visitBody.CustomerId);
             var employee = await _userRepository.GetUserById(visitBody.EmployeeId);
+
+            if (customer is null)
+            {
+                return NotFound("Not found customer of provided id");
+            }
+
+            if (employee is null)
+            {
+                return NotFound("Not found employee of provided id");
+            }
+
             Animal? animal = null;
 
             if (visitBody.AnimalID.HasValue)
@@ -61,8 +79,9 @@ namespace VetClinic_backend.Controllers
 
             var visit = new Visit { Customer = customer, Employee = employee, Animal = animal,
                 CustomerId = visitBody.CustomerId, EmployeeId = visitBody.EmployeeId,
-                VisitDateTime = visitBody.VisitDateTime, VisitStatus = visitBody.VisitStatus
+                VisitDateTime = visitBody.VisitDateTime, VisitStatus = VisitStatus.Scheduled
             };
+
             var result = await _visitRepository.AddVisit(visit);
 
             return Ok(_mapper.Map<VisitDto>(result));
@@ -73,27 +92,40 @@ namespace VetClinic_backend.Controllers
 
         public async Task<ActionResult<VisitDto>> UpdateVisit([FromRoute] int visitId, VisitUpdateDto request)
         {
+            var userRole = Enum.Parse<Role>(User.Claims.First(x => x.Type == "userRole").Value);
+
+            if (userRole > Role.Employee)
+            {
+                return Forbid();
+            }
+
             var visit = await _visitRepository.GetVisitById(visitId);
             var employee = await _userRepository.GetUserById(request.EmployeeId);
-            Animal? animal = null;
 
             if (visit is null)
             {
-                ModelState.AddModelError("", "Nie znaleziono wizyty o podanym ID");
-                return StatusCode(404, ModelState);
+                return NotFound("Not found visit of provided id");
+            }
+
+            if (employee is null)
+            {
+                return NotFound("Not found employee of provided id");
             }
 
             if (request.AnimalID.HasValue)
             {
-                animal = await _animalRepository.GetAnimalById(request.AnimalID.Value);
-                visit.Animal = animal;
+                visit.Animal = await _animalRepository.GetAnimalById(request.AnimalID.Value);
             }
 
-            visit.Employee = employee;
+            visit.Employee = employee ?? visit.Employee;
 
-            visit.VisitDateTime = request.VisitDateTime;
+            visit.VisitDateTime = request.VisitDateTime ?? visit.VisitDateTime;
 
-            visit.VisitStatus = request.VisitStatus;
+            var visitStatus = visit.VisitStatus;
+
+            Enum.TryParse<VisitStatus>(request.VisitStatus?.ToString(), out visitStatus);
+
+            visit.VisitStatus = visitStatus;
 
             var result = await _visitRepository.UpdateVisit(visit);
 

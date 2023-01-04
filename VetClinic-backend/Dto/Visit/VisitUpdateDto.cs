@@ -1,12 +1,16 @@
-﻿using VetClinic_backend.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
+using VetClinic_backend.Models;
 
 namespace VetClinic_backend.Dto.Visit
 {
     public class VisitUpdateDto
     {
+        [Required]
         public int EmployeeId { get; set; }
+        [Required]
         public int? AnimalID { get; set; }
-        public DateTime VisitDateTime { get; set; }
-        public VisitStatus VisitStatus { get; set; }
+        public DateTime? VisitDateTime { get; set; }
+        public int? VisitStatus { get; set; }
     }
 }
