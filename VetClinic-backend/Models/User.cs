@@ -23,5 +23,6 @@ namespace VetClinic_backend.Models
         public Role Role { get; set; }
 
         public ICollection<Animal> Animals { get; set; }
+        public ICollection<Visit> Visits { get; set; }
     }
 }
