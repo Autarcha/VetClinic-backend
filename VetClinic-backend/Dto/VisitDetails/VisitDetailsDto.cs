@@ -6,7 +6,6 @@ namespace VetClinic_backend.Dto.VisitDetails
     public class VisitDetailsDto
     {
         public int Id { get; set; }
-        public int VisitId { get; set; }
         public string VisitPurpose { get; set; }
         public string Description { get; set; }
         public string? AppliedDrugs { get; set; }

@@ -77,7 +77,7 @@ namespace VetClinic_backend.Controllers
 
             if(owner is null)
             {
-                return NotFound("There isn't animal owner of provided id");
+                return NotFound("Not found animal owner of provided id");
             }
 
             var animal = new Animal { Name = animalDetails.Name, Owner = owner, Specie = animalDetails.Specie, AdditionalInfo = animalDetails.AdditionalInfo };
@@ -101,7 +101,7 @@ namespace VetClinic_backend.Controllers
 
             if (animal is null)
             {
-                return NotFound("There isn't any animal of provided id");
+                return NotFound("Not found animal of provided id");
             }
 
 

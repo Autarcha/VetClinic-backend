@@ -114,7 +114,8 @@ namespace VetClinic_backend.Controllers
 
             if (request.AnimalID.HasValue)
             {
-                visit.Animal = await _animalRepository.GetAnimalById(request.AnimalID.Value);
+                var animal = await _animalRepository.GetAnimalById(request.AnimalID.Value);
+                visit.Animal = animal ?? visit.Animal;
             }
 
             visit.Employee = employee ?? visit.Employee;
