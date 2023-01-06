@@ -9,7 +9,7 @@ namespace VetClinic_backend.Dto.Visit
         public int EmployeeId { get; set; }
         [Required]
         public int CustomerId { get; set; }
-        public int? AnimalID { get; set; }
+        public int? AnimalId { get; set; }
         [Required]
         public DateTime VisitDateTime { get; set; }
     }

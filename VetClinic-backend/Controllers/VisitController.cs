@@ -71,9 +71,9 @@ namespace VetClinic_backend.Controllers
 
             Animal? animal = null;
 
-            if (visitBody.AnimalID.HasValue)
+            if (visitBody.AnimalId.HasValue)
             {
-                animal = await _animalRepository.GetAnimalById(visitBody.AnimalID.Value);
+                animal = await _animalRepository.GetAnimalById(visitBody.AnimalId.Value);
             }
 
 
@@ -112,9 +112,9 @@ namespace VetClinic_backend.Controllers
                 return NotFound("Not found employee of provided id");
             }
 
-            if (request.AnimalID.HasValue)
+            if (request.AnimalId.HasValue)
             {
-                var animal = await _animalRepository.GetAnimalById(request.AnimalID.Value);
+                var animal = await _animalRepository.GetAnimalById(request.AnimalId.Value);
                 visit.Animal = animal ?? visit.Animal;
             }
 
