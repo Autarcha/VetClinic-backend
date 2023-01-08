@@ -17,13 +17,13 @@ namespace VetClinic_backend.Repositories
 
         public async Task<Animal?> GetAnimalsByOwnerId(int owner_id)
         {
-            var result = await GetAll().FirstOrDefaultAsync(a => a.Owner.Id == owner_id);
+            var result = await GetAllAnimals().FirstOrDefaultAsync(a => a.Owner.Id == owner_id);
             return result;
         }
 
         public async Task<Animal?> GetAnimalById(int animal_id)
         {
-            var result = await GetAll().Include(a => a.Owner).FirstOrDefaultAsync(a => a.Id == animal_id);
+            var result = await GetAllAnimals().Include(a => a.Owner).FirstOrDefaultAsync(a => a.Id == animal_id);
             return result;
         }
         public async Task<Animal?> AddAnimal(Animal animal)

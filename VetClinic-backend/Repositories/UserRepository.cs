@@ -20,14 +20,14 @@ namespace VetClinic_backend.Repositories
 
         public async Task<User?> GetUserByEmail(string email)
         {
-            var result = await GetAll().FirstOrDefaultAsync(u => u.Email == email);
+            var result = await GetAllUsers().FirstOrDefaultAsync(u => u.Email == email);
             return result;
         }
 
 
         public async Task<User?> GetUserById(int id)
         {
-        var result = await GetAll().FirstOrDefaultAsync(u => u.Id == id);
+        var result = await GetAllUsers().FirstOrDefaultAsync(u => u.Id == id);
         return result;
         }
 

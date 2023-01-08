@@ -18,7 +18,7 @@ namespace VetClinic_backend.Repositories
 
         public async Task<Visit?> GetVisitById(int visitId)
         {
-            var result = await GetAll().FirstOrDefaultAsync(v => v.Id == visitId);
+            var result = await GetAllVisits().FirstOrDefaultAsync(v => v.Id == visitId);
             return result;
         }
 

@@ -8,8 +8,7 @@ namespace VetClinic_backend.Profiles
     {
         public VisitProfile()
         {
-            CreateMap<Visit, VisitDto>();
-            CreateMap<VisitDto, Visit>();
+            CreateMap<Visit, VisitDto>().ReverseMap();
         }
     }
 }

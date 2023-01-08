@@ -8,10 +8,9 @@ namespace VetClinic_backend.Profiles
     {
         public AnimalProfile()
         {
-            CreateMap<Animal, AnimalAddDto>();
-            CreateMap<AnimalAddDto, Animal>();
-            CreateMap<Animal, AnimalDto>();
-            CreateMap<AnimalDto, Animal>();
+            CreateMap<Animal, AnimalAddDto>().ReverseMap();
+            CreateMap<Animal, AnimalDto>().ReverseMap();
+            CreateMap<Animal, AnimalUpdateDto>().ReverseMap();
         }
     }
 }

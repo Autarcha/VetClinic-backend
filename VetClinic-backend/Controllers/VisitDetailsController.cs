@@ -26,6 +26,22 @@ namespace VetClinic_backend.Controllers
             _visitDetailsRepository = visitDetailsRepository;
         }
 
+        [HttpGet]
+        [ProducesResponseType(200, Type = typeof(VisitDetailsDto))]
+        public async Task<ActionResult<VisitDetailsDto>> GetVisitDetails([FromRoute] int visitId)
+        {
+            var visit = await _visitRepository.GetVisitById(visitId);
+
+            if (visit == null)
+            {
+                return NotFound("Not found visit of provided id");
+            }
+
+            var result = visit.VisitDetails;
+
+            return Ok(_mapper.Map<VisitDetailsDto>(result));
+        }
+
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(VisitDetailsDto))]
 
@@ -79,7 +95,7 @@ namespace VetClinic_backend.Controllers
 
             visitDetails.Bill = request.Bill ?? visitDetails.Bill;
 
-            var result = _visitDetailsRepository.UpdateVisitDetails(visitDetails);
+            var result = await _visitDetailsRepository.UpdateVisitDetails(visitDetails);
 
             return Ok(_mapper.Map<VisitDetailsDto>(result));
         }
