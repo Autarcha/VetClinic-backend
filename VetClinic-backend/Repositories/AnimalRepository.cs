@@ -9,35 +9,35 @@ namespace VetClinic_backend.Repositories
     {
         public AnimalRepository(RepositoryContext context) : base(context) { }
 
-        public IQueryable<Animal>? GetAllAnimals()
+        public IQueryable<Animal> GetAllAnimals()
         {
-            var result = GetAll().Include(x => x.Owner).OrderBy(x => x.Id);
+            var result = GetAll().Include(a => a.Owner).OrderBy(a => a.Id);
             return result;
         }
 
         public async Task<Animal?> GetAnimalsByOwnerId(int owner_id)
         {
-            var result = await GetAll().FirstOrDefaultAsync(a => a.Owner.Id == owner_id);
+            var result = await GetAllAnimals().FirstOrDefaultAsync(a => a.Owner.Id == owner_id);
             return result;
         }
 
         public async Task<Animal?> GetAnimalById(int animal_id)
         {
-            var result = await GetAll().Include(x => x.Owner).FirstOrDefaultAsync(a => a.Id == animal_id);
+            var result = await GetAllAnimals().Include(a => a.Owner).FirstOrDefaultAsync(a => a.Id == animal_id);
             return result;
         }
         public async Task<Animal?> AddAnimal(Animal animal)
         {
-            var newUser = await AddAsync(animal);
+            var newAnimal = await AddAsync(animal);
             await SaveChangesAsync();
-            return newUser;
+            return newAnimal;
         }
 
         public async Task<Animal?> UpdateAnimal(Animal animal)
         {
-            var updateUser = UpdateAsync(animal);
+            var updateAnimal = UpdateAsync(animal);
             await SaveChangesAsync();
-            return updateUser.Result;
+            return updateAnimal.Result;
         }
     }
 }

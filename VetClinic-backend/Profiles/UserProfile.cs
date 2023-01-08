@@ -8,15 +8,11 @@ namespace VetClinic_backend.Profiles
     {
         public UserProfile()
         {
-            CreateMap<User, UserDto>();
-            CreateMap<User, UserRegisterDto>();
-            CreateMap<UserRegisterDto, User>();
-            CreateMap<UserLoginDto, User>();
-            CreateMap<User, UserLoginDto>();
-            CreateMap<User, UserDetailsDto>();
-            CreateMap<UserDetailsDto, User>();
-            CreateMap<User, UserProfileDto>();
-            CreateMap<UserProfileDto, User>();
+            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<User, UserRegisterDto>().ReverseMap();
+            CreateMap<UserLoginDto, User>().ReverseMap();
+            CreateMap<User, UserDetailsDto>().ReverseMap();
+            CreateMap<User, UserProfileDto>().ReverseMap();
         }
     }
 }

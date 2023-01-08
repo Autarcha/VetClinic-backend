@@ -12,22 +12,22 @@ namespace VetClinic_backend.Repositories
         public UserRepository(RepositoryContext context) : base(context) { }
 
 
-        public IQueryable<User>? GetAllUsers()
+        public IQueryable<User> GetAllUsers()
         {
-            var result = GetAll().OrderBy(x => x.Id);
+            var result = GetAll().OrderBy(u => u.Id);
             return result;
         }
 
         public async Task<User?> GetUserByEmail(string email)
         {
-            var result = await GetAll().FirstOrDefaultAsync(u => u.Email == email);
+            var result = await GetAllUsers().FirstOrDefaultAsync(u => u.Email == email);
             return result;
         }
 
 
         public async Task<User?> GetUserById(int id)
         {
-        var result = await GetAll().FirstOrDefaultAsync(u => u.Id == id);
+        var result = await GetAllUsers().FirstOrDefaultAsync(u => u.Id == id);
         return result;
         }
 
@@ -40,15 +40,15 @@ namespace VetClinic_backend.Repositories
 
         public async Task<User?> UpdateUser(User user)
         {
-            var updateUser = UpdateAsync(user);
+            var updateUser = await UpdateAsync(user);
             await SaveChangesAsync();
-            return updateUser.Result;
+            return updateUser;
         }
 
         public async Task<User?> LoginUser(string email, string password)
         {
             var users = GetAllUsers();
-            var result = await users.FirstOrDefaultAsync(x => x.Email == email);
+            var result = await users.FirstOrDefaultAsync(u => u.Email == email);
             if (result is null)
                 return result;
 

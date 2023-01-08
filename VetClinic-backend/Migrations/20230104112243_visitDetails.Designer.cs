@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VetClinic_backend.Data;
 
@@ -11,9 +12,10 @@ using VetClinic_backend.Data;
 namespace VetClinic_backend.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230104112243_visitDetails")]
+    partial class visitDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,7 +142,9 @@ namespace VetClinic_backend.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.HasIndex("VisitDetailsId");
+                    b.HasIndex("VisitDetailsId")
+                        .IsUnique()
+                        .HasFilter("[VisitDetailsId] IS NOT NULL");
 
                     b.ToTable("visits", (string)null);
                 });
@@ -158,10 +162,6 @@ namespace VetClinic_backend.Migrations
                         .HasColumnType("varchar(MAX)")
                         .HasColumnName("AppliedDrugs");
 
-                    b.Property<double>("Bill")
-                        .HasColumnType("double precision")
-                        .HasColumnName("Bill");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("varchar(MAX)")
@@ -174,6 +174,9 @@ namespace VetClinic_backend.Migrations
                     b.Property<string>("Recommendations")
                         .HasColumnType("varchar(MAX)")
                         .HasColumnName("Recommendations");
+
+                    b.Property<int?>("VisitId")
+                        .HasColumnType("int");
 
                     b.Property<string>("VisitPurpose")
                         .IsRequired()
@@ -215,8 +218,8 @@ namespace VetClinic_backend.Migrations
                         .IsRequired();
 
                     b.HasOne("VetClinic_backend.Models.VisitDetails", "VisitDetails")
-                        .WithMany()
-                        .HasForeignKey("VisitDetailsId");
+                        .WithOne("Visit")
+                        .HasForeignKey("VetClinic_backend.Models.Visit", "VisitDetailsId");
 
                     b.Navigation("Animal");
 
@@ -239,6 +242,12 @@ namespace VetClinic_backend.Migrations
                     b.Navigation("CustomerVisits");
 
                     b.Navigation("EmployeeVisits");
+                });
+
+            modelBuilder.Entity("VetClinic_backend.Models.VisitDetails", b =>
+                {
+                    b.Navigation("Visit")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

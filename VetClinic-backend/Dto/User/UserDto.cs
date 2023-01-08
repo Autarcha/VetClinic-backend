@@ -4,7 +4,6 @@ namespace VetClinic_backend.Dto.User
 {
     public class UserDto
     {
-        // User data known public on service
         public int Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }

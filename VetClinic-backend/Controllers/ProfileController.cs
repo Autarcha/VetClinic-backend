@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VetClinic_backend.Dto.User;
 using VetClinic_backend.Interfaces;
+using VetClinic_backend.Models;
 
 namespace VetClinic_backend.Controllers
 {
@@ -41,8 +42,7 @@ namespace VetClinic_backend.Controllers
 
             if (user is null)
             {
-                ModelState.AddModelError("", "Nie znaleziono takiego użytkownika");
-                return StatusCode(404, ModelState);
+                return NotFound("Not found user of provided id");
             }
 
             if (!String.IsNullOrEmpty(request.Email))
@@ -85,16 +85,15 @@ namespace VetClinic_backend.Controllers
 
             if (user is null)
             {
-                ModelState.AddModelError("", "Nie znaleziono takiego użytkownika");
-                return StatusCode(404, ModelState);
+                return NotFound("Not found user of provided id");
             }
 
 
-            if (!(String.IsNullOrEmpty(request.OldPassword) && String.IsNullOrEmpty(request.NewPassword)))
+            if (request.OldPassword is not null && request.NewPassword is not null)
             {
                 if (!BCrypt.Net.BCrypt.Verify(request.OldPassword, user.Password))
                 {
-                    ModelState.AddModelError("", "Błędne obecne hasło");
+                    ModelState.AddModelError("", "Wrong current password");
                     return StatusCode(406, ModelState);
                 }
 
@@ -102,7 +101,7 @@ namespace VetClinic_backend.Controllers
                 if (BCrypt.Net.BCrypt.Verify(request.NewPassword, user.Password))
                 {
 
-                    ModelState.AddModelError("", "Nowe hasło nie może być takie samo jak poprzednie");
+                    ModelState.AddModelError("", "New password cannot bet the same as old one");
                     return StatusCode(500, ModelState);
                 }
 

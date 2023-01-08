@@ -25,7 +25,7 @@ namespace VetClinic_backend.Authentication
                         new Claim("id", user.Id.ToString()),
                         new Claim("userRole", user.Role.ToString()),
                     }),
-                Expires = DateTime.UtcNow.AddHours(2),
+                Expires = DateTime.UtcNow.AddHours(8),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)
             };
