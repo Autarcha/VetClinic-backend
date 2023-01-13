@@ -34,12 +34,13 @@ namespace VetClinic_backend.Controllers
         public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
         {
             var userRole = Enum.Parse<Role>(User.Claims.First(x => x.Type == "userRole").Value);
+            var userId = int.Parse(User.Claims.First(x => x.Type == "id").Value);
 
             if (userRole > Role.Employee)
             {
                 return Forbid();
             }
-            var request = _userRepository.GetAllUsers();
+            var request = _userRepository.GetAllUsers().Where(x => x.Id != userId);
 
             if (userRole != Role.Admin)
             {
@@ -143,7 +144,7 @@ namespace VetClinic_backend.Controllers
 
             var employeeRole = Enum.Parse<Role>(User.Claims.First(x => x.Type == "userRole").Value);
 
-            if (employeeRole > Role.Admin)
+            if (employeeRole > Role.Employee)
             {
                 return Forbid();
             }
