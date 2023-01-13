@@ -18,6 +18,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddCors();
 //Repositories
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAnimalRepository, AnimalRepository>();
 builder.Services.AddScoped<IVisitRepository, VisitRepository>();
